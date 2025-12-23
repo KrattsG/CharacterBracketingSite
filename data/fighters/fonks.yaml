@@ -1,0 +1,35 @@
+id: fonks1
+name: Fonks
+image: https://i.pinimg.com/736x/31/bf/00/31bf00391d53e7ac7788fc05473d04bf.jpg
+power: 75
+durability: 90
+speed: 60
+strengths:
+weaknesses:
+  - Black Hole
+abilities:
+  - name: "Shadow Strike"
+    type: "attack"
+    damage: 55
+    cooldown: 3
+    startup: 1
+  - name: "Quick Slash"
+    type: "attack"
+    damage: 40
+    cooldown: 2
+    startup: 0
+  - name: "Power Mode"
+    type: "mode_switch"
+    stat_boosts:
+      power: 20
+      speed: 10
+    duration: 3
+    cooldown: 5
+    startup: 1
+  - name: "Defensive Stance"
+    type: "mode_switch"
+    stat_boosts:
+      durability: 30
+    duration: 2
+    cooldown: 4
+    startup: 0
