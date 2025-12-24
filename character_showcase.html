@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OC Fighting - Character Showcase</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>OC Fighting - Character Showcase</h1>
+
+        <div class="hero-section">
+            <p class="hero-text">Explore all the fighters in the OC Fighting universe!</p>
+            <input type="text" id="character-search" class="dropdown-search" placeholder="Search characters by name, verse, or power system..." oninput="filterCharacters()">
+            <a href="Index.html" class="randomize-button" style="margin-left: 20px; text-decoration: none;">🏠 Back to Matchup</a>
+        </div>
+
+        <div id="character-grid" class="character-grid">
+            <!-- Character cards will be populated by JavaScript -->
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="character_showcase.js"></script>
+</body>
+</html>

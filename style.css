@@ -1,108 +1,577 @@
 body {
-  font-family: sans-serif;
-  background: #121212;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #121212 0%, #1a1a2e 100%);
   color: white;
-  text-align: center;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
-.matchup {
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 40px;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #4ecdc4;
+}
+
+/* Hero Section */
+.hero-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hero-text {
+  font-size: 1.2rem;
+  color: #ccc;
+  margin: 0 0 20px 0;
+  font-weight: 300;
+}
+
+.randomize-button {
+  padding: 12px 24px;
+  background: linear-gradient(45deg, #ffd93d, #ff6b6b);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 217, 61, 0.3);
+}
+
+.randomize-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 217, 61, 0.4);
+}
+
+.randomize-button:active {
+  transform: translateY(0);
+}
+
+/* Fighter Selection Grid */
+.fighter-selection-grid {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 30px 0;
+  gap: 40px;
+  margin-bottom: 50px;
+  flex-wrap: wrap;
 }
 
-.slot {
-  width: 200px;
-  height: 300px;
-  border: 2px solid #555;
-  margin: 0 20px;
-  padding: 10px;
-  cursor: pointer;
-  text-align: center;
-}
-
-.slot img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-}
-
-.slot h3 {
-  margin: 10px 0 5px 0;
-  font-size: 18px;
-}
-
-.slot p {
-  margin: 5px 0;
-  font-size: 14px;
-}
-
-.vs {
-  font-size: 32px;
-  font-weight: bold;
-}
-
-.roster {
+.fighter-selector {
+  position: relative;
+  width: 300px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 15px;
+  transition: all 0.4s ease;
+  overflow: hidden;
+  padding: 20px;
 }
 
-.fighter {
-  width: 200px;
-  border: 1px solid #444;
-  padding: 10px;
-  cursor: pointer;
-  background: #1e1e1e;
+.fighter-selector:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border-color: #4ecdc4;
+}
+
+.fighter-selector.selected {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+}
+
+.fighter-slot {
+  position: relative;
+  width: 320px;
+  height: 600px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.4s ease;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.fighter-slot:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border-color: #4ecdc4;
+  overflow: visible;
+}
+
+.fighter-slot.selected {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  box-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+}
+
+.selector-label {
+  font-size: 1.2rem;
+  color: #ccc;
+  margin-bottom: 15px;
+  font-weight: 500;
   text-align: center;
 }
 
-.fighter img {
+.selector-label.selected {
+  color: #4ecdc4;
+  font-weight: 600;
+}
+
+.fighter-dropdown {
   width: 100%;
+  color: linear-gradient(45deg, #e31b1b, #3addaf);
+  padding: 12px 16px;
+  font-size: 1.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  margin-bottom: 15px;
+  background: linear-gradient(45deg, #e31b1b, #3addaf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border: none;
+  position: relative;
+}
+
+.fighter-dropdown:hover {
+  transform: translateY(-2px);
+}
+
+.fighter-dropdown option {
+  background: linear-gradient(45deg, #e31b1b, #3addaf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 8px;
+}
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+  font-style: normal;
+}
+
+.dropdown-header {
+  width: 100%;
+  color: linear-gradient(45deg, #e31b1b, #3addaf);
+  padding: 12px 0px;
+  font-size: 1.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 15px;
+  background: linear-gradient(45deg, #e31b1b, #3addaf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border: none;
+  position: relative;
+  display: flex;
+
+}
+
+.dropdown-header:hover {
+  transform: translateY(-2px);
+}
+
+.dropdown-arrow {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.custom-dropdown:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-content {
+  position: absolute;
+  left: 1.5%;
+  width: 90%;
+  background: rgba(0, 0, 0, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  padding: 3%;
+}
+
+.custom-dropdown:hover .dropdown-content {
+  visibility: visible;
+}
+
+.dropdown-search {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.dropdown-options {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.dropdown-options div {
+  padding: 10px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #e31b1b, #3addaf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all 0.3s ease;
+}
+
+.dropdown-options div:hover {
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-text-fill-color: white;
+  background-clip: initial;
+}
+
+.selected-fighter {
+  width: 100%;
+  text-align: center;
+}
+
+.selected-fighter-image {
+  width: 150px;
   height: 150px;
   object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.fighter h3 {
-  margin: 10px 0 5px 0;
-  font-size: 18px;
+.selected-fighter-verse,
+.selected-fighter-powersystem {
+  font-size: 0.9rem;
+  color: #ddd;
+  margin-bottom: 8px;
+  font-weight: 400;
 }
 
-.fighter p {
-  margin: 5px 0;
-  font-size: 14px;
+.fighter-strengths,
+.fighter-weaknesses {
+  text-align: left;
+  margin-top: 10px;
 }
 
-.fighter:hover {
-  background: #333;
+.fighter-strengths h5,
+.fighter-weaknesses h5 {
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  font-weight: 600;
 }
 
-.slot.selected {
-  border-color: #fff;
+.fighter-strengths h5 {
+  color: #4ecdc4;
 }
 
-#battle {
-  background: #ff4444;
+.fighter-weaknesses h5 {
+  color: #ff6b6b;
+}
+
+.fighter-strengths ul,
+.fighter-weaknesses ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* VS Divider */
+.vs-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vs-circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Matchup Results */
+.matchup-results {
+  margin-top: 50px;
+}
+
+.matchup-display {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fighter-vs {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.fighter-card {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  max-width: 400px;
+  transition: all 0.3s ease;
+}
+
+.fighter-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.fighter-card .fighter-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.fighter-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #4ecdc4;
+}
+
+.fighter-card p {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+.strengths, .weaknesses {
+  text-align: left;
+  margin-top: 15px;
+}
+
+.strengths h4 {
+  color: #4ecdc4;
+  margin-bottom: 5px;
+}
+
+.weaknesses h4 {
+  color: #ff6b6b;
+  margin-bottom: 5px;
+}
+
+.strengths ul, .weaknesses ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.strengths li, .weaknesses li {
+  padding: 3px 0;
+  font-size: 0.85rem;
+}
+
+.vs-text {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffd93d;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.matchup-analysis {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.matchup-analysis h3 {
+  color: #ffd93d;
+  margin-bottom: 10px;
+}
+
+.matchup-analysis p {
+  font-size: 1.1rem;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+/* Character Showcase Styles */
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.character-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.character-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border-color: #4ecdc4;
+}
+
+.character-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.character-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #4ecdc4;
+}
+
+.character-card p {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  .character-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .character-card {
+    padding: 15px;
+  }
+
+  .character-image {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+/* Winner selection and winners list styles */
+.winner-selection {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.winner-selection h4 {
+  margin-bottom: 10px;
+  color: #4ecdc4;
+  font-size: 1.2rem;
+}
+
+.winner-btn {
+  background: linear-gradient(45deg, #4ecdc4, #44a08d);
   color: white;
   border: none;
   padding: 10px 20px;
-  font-size: 18px;
+  margin: 0 10px;
+  border-radius: 5px;
   cursor: pointer;
-  margin: 20px 0;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
 }
 
-#battle:hover {
-  background: #cc3333;
+.winner-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
 }
 
-#result {
-  margin: 20px 0;
-  padding: 20px;
-  background: #222;
+.winners-list {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-#result h2 {
-  margin-top: 0;
+.winners-list h4 {
+  margin-bottom: 10px;
+  color: #ffd93d;
+  font-size: 1.1rem;
+}
+
+.winners-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.winners-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  color: #ccc;
+}
+
+.winners-list li:last-child {
+  border-bottom: none;
 }
