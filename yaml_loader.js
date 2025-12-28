@@ -25,5 +25,4 @@ async function loadCharacters() {
     }
 }
 
-// Load characters when the page loads
-document.addEventListener('DOMContentLoaded', loadCharacters);
+// Characters will be loaded by script.js

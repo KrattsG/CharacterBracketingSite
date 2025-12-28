@@ -11,37 +11,9 @@ class MatchupSystem {
     this.currentSaveFile = localStorage.getItem('currentSaveFile') || 'default';
   }
 
-  async loadFighters() {
-    try {
-      const loadedFiles = [];
-
-      // Try loading sequentially named files (fighter1.yaml, fighter2.yaml, etc.)
-      for (let i = 1; i <= 20; i++) {
-        try {
-          const filePath = `data/fighters/fighter${i}.yaml`;
-          const response = await fetch(filePath);
-          if (response.ok) {
-            const yamlText = await response.text();
-            const fighter = jsyaml.load(yamlText);
-            this.fighters.push(fighter);
-            loadedFiles.push(`fighter${i}`);
-          }
-        } catch (error) {
-          // File doesn't exist, continue to next
-          continue;
-        }
-      }
-
-      if (this.fighters.length === 0) {
-        console.warn('No fighter files found in data/fighters directory');
-      } else {
-        // Populate dropdowns
-        this.populateDropdowns();
-        console.log('Fighters loaded:', this.fighters.length, 'fighters from files:', loadedFiles);
-      }
-    } catch (error) {
-      console.error('Error loading fighters:', error);
-    }
+  loadFighters() {
+    this.fighters = allCharacters;
+    this.populateDropdowns();
   }
 
   populateDropdowns() {
@@ -68,13 +40,13 @@ class MatchupSystem {
       const optionDiv = document.createElement('div');
       optionDiv.className = 'dropdown-option';
       optionDiv.textContent = fighter.name;
-      optionDiv.onclick = () => this.selectFighter(fighter.id, fighterNumber, dropdownId);
+      optionDiv.onclick = () => this.selectFighter(fighter.name, fighterNumber, dropdownId);
       optionsContainer.appendChild(optionDiv);
     });
   }
 
   selectFighter(fighterId, fighterNumber, dropdownId) {
-    const selectedFighter = fighterId ? this.fighters.find(f => f.id === fighterId) : null;
+    const selectedFighter = fighterId ? this.fighters.find(f => f.name === fighterId) : null;
     const slotId = fighterNumber === 1 ? 'fighter1-slot' : 'fighter2-slot';
     const slot = document.getElementById(slotId);
     const selectedTextId = fighterNumber === 1 ? 'fighter1-selected-text' : 'fighter2-selected-text';
@@ -181,8 +153,8 @@ class MatchupSystem {
         </div>
         <div class="winner-selection">
           <h4>Select the Winner:</h4>
-          <button onclick="matchupSystem.recordWinner('${this.selectedFighter1.id}', '${this.selectedFighter2.id}')" class="winner-btn">${this.selectedFighter1.name} Wins</button>
-          <button onclick="matchupSystem.recordWinner('${this.selectedFighter2.id}', '${this.selectedFighter1.id}')" class="winner-btn">${this.selectedFighter2.name} Wins</button>
+          <button onclick="matchupSystem.recordWinner('${this.selectedFighter1.name}', '${this.selectedFighter2.name}')" class="winner-btn">${this.selectedFighter1.name} Wins</button>
+          <button onclick="matchupSystem.recordWinner('${this.selectedFighter2.name}', '${this.selectedFighter1.name}')" class="winner-btn">${this.selectedFighter2.name} Wins</button>
         </div>
         <div class="save-management">
           <div id="current-save-display" class="current-save">Current Save: ${this.currentSaveFile}</div>
@@ -244,16 +216,16 @@ class MatchupSystem {
     this.selectedFighter2 = shuffled[1];
 
     // Update dropdowns
-    this.selectFighter(this.selectedFighter1.id, 1, 'fighter1-dropdown');
-    this.selectFighter(this.selectedFighter2.id, 2, 'fighter2-dropdown');
+    this.selectFighter(this.selectedFighter1.name, 1, 'fighter1-dropdown');
+    this.selectFighter(this.selectedFighter2.name, 2, 'fighter2-dropdown');
 
     // Display matchup
     this.displayMatchup();
   }
 
   recordWinner(winnerId, loserId) {
-    const winner = this.fighters.find(f => f.id === winnerId);
-    const loser = this.fighters.find(f => f.id === loserId);
+    const winner = this.fighters.find(f => f.name === winnerId);
+    const loser = this.fighters.find(f => f.name === loserId);
 
     if (!winner || !loser) {
       console.error('Winner or loser not found');
@@ -370,8 +342,8 @@ class MatchupSystem {
   }
 
   recordWinner(winnerId, loserId) {
-    const winner = this.fighters.find(f => f.id === winnerId);
-    const loser = this.fighters.find(f => f.id === loserId);
+    const winner = this.fighters.find(f => f.name === winnerId);
+    const loser = this.fighters.find(f => f.name === loserId);
 
     if (!winner || !loser) {
       console.error('Winner or loser not found');

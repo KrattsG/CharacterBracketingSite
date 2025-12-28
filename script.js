@@ -13,6 +13,7 @@ function loadScript(src) {
 window.addEventListener('load', async () => {
   try {
     await loadScript('https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js');
+    await loadCharacters();
     await loadScript('matchup_system.js');
     matchupSystem.loadFighters();
 

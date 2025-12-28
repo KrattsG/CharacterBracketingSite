@@ -12,36 +12,87 @@
 
 		<div class="hero-section">
 			<p class="hero-text">Design your own fighter to join the battle!</p>
-			<a href="index.html" class="randomize-button" style="text-decoration: none;">🏠 Back to Matchup</a>
+			<a href="Index.html" class="randomize-button" style="text-decoration: none;">🏠 Matchup</a>
+			<a href="character_showcase.html" class="randomize-button" style="margin-left: 20px; text-decoration: none;">👥 Character Showcase</a>
 		</div>
 
-		<form id="character-creation-form" class="character-form">
-			<label for="character-name">Character Name:</label>
-			<input type="text" id="character-name" name="character-name" required>
-			<br>
+		<div class="creation-container">
+			<div class="form-preview-container">
+				<form id="character-creation-form" class="character-form">
+					<div class="form-section">
+						<h3>Basic Information</h3>
+						<div class="form-group">
+							<label for="character-name">Character Name *</label>
+							<input type="text" id="character-name" name="character-name" required placeholder="Enter character name">
+						</div>
 
-			<label for="character-verse">Verse / Setting:</label>
-			<input type="text" id="character-verse" name="character-verse">
-			<br>
+						<div class="form-group">
+							<label for="character-verse">Verse / Setting</label>
+							<input type="text" id="character-verse" name="character-verse" placeholder="e.g. Dragon Hunters, Soul's Portrait">
+						</div>
 
-			<label for="character-ability">Power System / Ability:</label>
-			<input type="text" id="character-ability" name="character-ability">
-			<br>
+						<div class="form-group">
+							<label for="character-ability">Power System / Ability</label>
+							<input type="text" id="character-ability" name="character-ability" placeholder="e.g. Arcana, Emotion">
+						</div>
+					</div>
 
-			<label for="character-image">Character Image URL:</label>
-			<input type="url" id="character-image" name="character-image">
-			<br>
+					<div class="form-section">
+						<h3>Appearance</h3>
+						<div class="form-group">
+							<label for="character-image">Character Image URL</label>
+							<input type="url" id="character-image" name="character-image" placeholder="https://example.com/image.jpg">
+							<small class="form-hint">Paste a direct link to an image (JPG, PNG, etc.)</small>
+						</div>
+					</div>
 
-			<label for="character-strengths">Strengths (comma-separated):</label>
-			<input type="text" id="character-strengths" name="character-strengths" placeholder="e.g. Time, Ranged">
-			<br>
+					<div class="form-section">
+						<h3>Combat Attributes</h3>
+						<div class="form-group">
+							<label for="character-strengths">Strengths</label>
+							<input type="text" id="character-strengths" name="character-strengths" placeholder="e.g. Time, Ranged, Black Hole">
+							<small class="form-hint">Separate multiple strengths with commas</small>
+						</div>
 
-			<label for="character-weaknesses">Weaknesses (comma-separated):</label>
-			<input type="text" id="character-weaknesses" name="character-weaknesses" placeholder="e.g. Inexistent">
-			<br>
+						<div class="form-group">
+							<label for="character-weaknesses">Weaknesses</label>
+							<input type="text" id="character-weaknesses" name="character-weaknesses" placeholder="e.g. Inexistent, Physical">
+							<small class="form-hint">Separate multiple weaknesses with commas</small>
+						</div>
+					</div>
 
-			<button type="submit" class="submit-button">Create Character</button>
-		</form>
+					<div class="form-actions">
+						<button type="submit" class="submit-button">⚔️ Create Character</button>
+						<button type="button" class="preview-button" onclick="previewCharacter()">👁️ Preview</button>
+					</div>
+				</form>
+
+				<div class="character-preview" id="character-preview">
+					<h3>Character Preview</h3>
+					<div class="preview-card">
+						<div class="preview-image">
+							<img id="preview-img" src="" alt="Character Preview" style="display: none;">
+							<div class="no-image" id="no-image">No image selected</div>
+						</div>
+						<div class="preview-info">
+							<h4 id="preview-name">Character Name</h4>
+							<p id="preview-verse">Verse: Not specified</p>
+							<p id="preview-ability">Power System: Not specified</p>
+							<div class="preview-attributes">
+								<div class="preview-strengths">
+									<h5>Strengths:</h5>
+									<ul id="preview-strengths-list"></ul>
+								</div>
+								<div class="preview-weaknesses">
+									<h5>Weaknesses:</h5>
+									<ul id="preview-weaknesses-list"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<div id="creation-message" class="creation-message">
 			<!-- Creation success or error messages will appear here -->
