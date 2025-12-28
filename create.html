@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OC Fighting - Turn-Based Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div class="container">
+		<h1>OC Fighting - Create Your Character</h1>
+
+		<div class="hero-section">
+			<p class="hero-text">Design your own fighter to join the battle!</p>
+			<a href="index.html" class="randomize-button" style="text-decoration: none;">🏠 Back to Matchup</a>
+		</div>
+
+		<form id="character-creation-form" class="character-form">
+			<label for="character-name">Character Name:</label>
+			<input type="text" id="character-name" name="character-name" required>
+			<br>
+
+			<label for="character-verse">Verse / Setting:</label>
+			<input type="text" id="character-verse" name="character-verse">
+			<br>
+
+			<label for="character-ability">Power System / Ability:</label>
+			<input type="text" id="character-ability" name="character-ability">
+			<br>
+
+			<label for="character-image">Character Image URL:</label>
+			<input type="url" id="character-image" name="character-image">
+			<br>
+
+			<label for="character-strengths">Strengths (comma-separated):</label>
+			<input type="text" id="character-strengths" name="character-strengths" placeholder="e.g. Time, Ranged">
+			<br>
+
+			<label for="character-weaknesses">Weaknesses (comma-separated):</label>
+			<input type="text" id="character-weaknesses" name="character-weaknesses" placeholder="e.g. Inexistent">
+			<br>
+
+			<button type="submit" class="submit-button">Create Character</button>
+		</form>
+
+		<div id="creation-message" class="creation-message">
+			<!-- Creation success or error messages will appear here -->
+		</div>
+	</div>
+	<script src="script.js"></script>
+	<script src="create.js"></script>
