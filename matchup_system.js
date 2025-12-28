@@ -7,6 +7,8 @@ class MatchupSystem {
     this.initialPlaceholder2 = '🛡️ Select Fighter 2';
     this.placeholder1 = '⚔️ Select Fighter 1';
     this.placeholder2 = '🛡️ Select Fighter 2';
+    this.saveFiles = this.loadSaveFiles();
+    this.currentSaveFile = localStorage.getItem('currentSaveFile') || 'default';
   }
 
   async loadFighters() {
@@ -182,13 +184,28 @@ class MatchupSystem {
           <button onclick="matchupSystem.recordWinner('${this.selectedFighter1.id}', '${this.selectedFighter2.id}')" class="winner-btn">${this.selectedFighter1.name} Wins</button>
           <button onclick="matchupSystem.recordWinner('${this.selectedFighter2.id}', '${this.selectedFighter1.id}')" class="winner-btn">${this.selectedFighter2.name} Wins</button>
         </div>
+        <div class="save-management">
+          <div id="current-save-display" class="current-save">Current Save: ${this.currentSaveFile}</div>
+          <div class="save-controls">
+            <input type="text" id="new-save-name" placeholder="New save file name" class="save-input">
+            <button onclick="matchupSystem.createSaveFile(document.getElementById('new-save-name').value)" class="save-btn">Create Save</button>
+            <button onclick="matchupSystem.exportSaveFile(matchupSystem.currentSaveFile)" class="save-btn">Export Current</button>
+            <input type="file" id="import-file" accept=".json" style="display: none;" onchange="matchupSystem.importSaveFile(this.files[0])">
+            <button onclick="document.getElementById('import-file').click()" class="save-btn">Import Save</button>
+          </div>
+          <div class="save-files-list">
+            <h5>Available Save Files:</h5>
+            <ul id="save-file-list"></ul>
+          </div>
+        </div>
         <div id="winners-list" class="winners-list">
-          <h4>Recent Winners:</h4>
+          <h4>Recent Winners in "${this.currentSaveFile}":</h4>
           <ul id="winners-ul"></ul>
         </div>
       </div>
     `;
     this.displayWinners();
+    this.updateSaveFileUI();
   }
 
   analyzeMatchup() {
@@ -306,6 +323,195 @@ class MatchupSystem {
         option.style.display = 'none';
       }
     }
+  }
+
+  loadSaveFiles() {
+    const saves = JSON.parse(localStorage.getItem('matchupSaveFiles') || '{}');
+    if (!saves.default) {
+      saves.default = { name: 'Default Save', winners: [], created: new Date().toISOString() };
+    }
+    localStorage.setItem('matchupSaveFiles', JSON.stringify(saves));
+    return saves;
+  }
+
+  createSaveFile(name) {
+    if (!name || name.trim() === '') {
+      alert('Please enter a valid save file name.');
+      return;
+    }
+
+    const trimmedName = name.trim();
+    if (this.saveFiles[trimmedName]) {
+      alert('A save file with this name already exists.');
+      return;
+    }
+
+    this.saveFiles[trimmedName] = {
+      name: trimmedName,
+      winners: [],
+      created: new Date().toISOString()
+    };
+
+    localStorage.setItem('matchupSaveFiles', JSON.stringify(this.saveFiles));
+    this.updateSaveFileUI();
+    alert(`Save file "${trimmedName}" created successfully!`);
+  }
+
+  switchSaveFile(saveName) {
+    if (!this.saveFiles[saveName]) {
+      console.error('Save file not found');
+      return;
+    }
+
+    this.currentSaveFile = saveName;
+    localStorage.setItem('currentSaveFile', saveName);
+    this.displayWinners();
+    this.updateSaveFileUI();
+  }
+
+  recordWinner(winnerId, loserId) {
+    const winner = this.fighters.find(f => f.id === winnerId);
+    const loser = this.fighters.find(f => f.id === loserId);
+
+    if (!winner || !loser) {
+      console.error('Winner or loser not found');
+      return;
+    }
+
+    const matchupResult = {
+      winner: winner.name,
+      loser: loser.name,
+      timestamp: new Date().toISOString(),
+      winnerId: winnerId,
+      loserId: loserId
+    };
+
+    // Add to current save file
+    if (!this.saveFiles[this.currentSaveFile]) {
+      this.saveFiles[this.currentSaveFile] = { name: this.currentSaveFile, winners: [], created: new Date().toISOString() };
+    }
+
+    this.saveFiles[this.currentSaveFile].winners.unshift(matchupResult);
+
+    // Keep only the last 50 winners per save file
+    this.saveFiles[this.currentSaveFile].winners = this.saveFiles[this.currentSaveFile].winners.slice(0, 50);
+
+    // Save back to localStorage
+    localStorage.setItem('matchupSaveFiles', JSON.stringify(this.saveFiles));
+
+    // Automatically export/save to data/saves/ with dynamic name
+    this.autoSaveToDataSaves();
+
+    // Update display
+    this.displayWinners();
+
+    // Show confirmation
+    alert(`${winner.name} recorded as winner against ${loser.name} in "${this.currentSaveFile}"!`);
+  }
+
+  displayWinners() {
+    const winnersUl = document.getElementById('winners-ul');
+    if (!winnersUl) return;
+
+    const currentSave = this.saveFiles[this.currentSaveFile];
+    const winners = currentSave ? currentSave.winners : [];
+
+    winnersUl.innerHTML = '';
+
+    if (winners.length === 0) {
+      winnersUl.innerHTML = '<li>No winners recorded yet in this save file.</li>';
+      return;
+    }
+
+    winners.forEach(result => {
+      const li = document.createElement('li');
+      const date = new Date(result.timestamp).toLocaleString();
+      li.textContent = `${result.winner} defeated ${result.loser} (${date})`;
+      winnersUl.appendChild(li);
+    });
+  }
+
+  updateSaveFileUI() {
+    // Update current save file display
+    const currentSaveDisplay = document.getElementById('current-save-display');
+    if (currentSaveDisplay) {
+      currentSaveDisplay.textContent = `Current Save: ${this.currentSaveFile}`;
+    }
+
+    // Update save file list
+    const saveFileList = document.getElementById('save-file-list');
+    if (saveFileList) {
+      saveFileList.innerHTML = '';
+      Object.keys(this.saveFiles).forEach(saveName => {
+        const save = this.saveFiles[saveName];
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${save.name} (${save.winners.length} entries)</span>
+          <button onclick="matchupSystem.switchSaveFile('${saveName}')" class="${saveName === this.currentSaveFile ? 'active' : ''}">Switch</button>
+        `;
+        saveFileList.appendChild(li);
+      });
+    }
+  }
+
+  exportSaveFile(saveName) {
+    if (!this.saveFiles[saveName]) {
+      alert('Save file not found.');
+      return;
+    }
+
+    const saveData = this.saveFiles[saveName];
+    const dataStr = JSON.stringify(saveData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = `${saveName}_matchup_results.json`;
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  }
+
+  importSaveFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedData = JSON.parse(e.target.result);
+        if (!importedData.name || !Array.isArray(importedData.winners)) {
+          throw new Error('Invalid save file format');
+        }
+
+        const saveName = importedData.name;
+        if (this.saveFiles[saveName]) {
+          if (!confirm(`A save file named "${saveName}" already exists. Overwrite it?`)) {
+            return;
+          }
+        }
+
+        this.saveFiles[saveName] = importedData;
+        localStorage.setItem('matchupSaveFiles', JSON.stringify(this.saveFiles));
+        this.updateSaveFileUI();
+        alert(`Save file "${saveName}" imported successfully!`);
+      } catch (error) {
+        alert('Error importing save file: ' + error.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  autoSaveToDataSaves() {
+    const saveData = this.saveFiles[this.currentSaveFile];
+    const dataStr = JSON.stringify(saveData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+
+    // Create dynamic filename with timestamp
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    const fileName = `data/saves/${this.currentSaveFile}_${timestamp}.json`;
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', fileName);
+    linkElement.click();
   }
 }
 
